@@ -1,0 +1,15 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005Cchase_005CRiderProjects_005CRichPresence_005CRichPresence_005CLib_005Cdiscord_005Fgame_005Fsdk_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=D_003A_005CDownloads_005Cdiscord_005Fgame_005Fsdk_005Ccsharp_005CActivityManager_002Ecs/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=D_003A_005CDownloads_005Cdiscord_005Fgame_005Fsdk_005Ccsharp_005CConstants_002Ecs/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=D_003A_005CDownloads_005Cdiscord_005Fgame_005Fsdk_005Ccsharp_005CCore_002Ecs/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=D_003A_005CDownloads_005Cdiscord_005Fgame_005Fsdk_005Ccsharp_005CImageManager_002Ecs/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=D_003A_005CDownloads_005Cdiscord_005Fgame_005Fsdk_005Ccsharp_005CLobbyManager_002Ecs/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=D_003A_005CDownloads_005Cdiscord_005Fgame_005Fsdk_005Ccsharp_005CStorageManager_002Ecs/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=D_003A_005CDownloads_005Cdiscord_005Fgame_005Fsdk_005Ccsharp_005CStoreManager_002Ecs/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=D_003A_005CDownloads_005Cdiscord_005Fgame_005Fsdk_005Clib_005Cx86_005Cdiscord_005Fgame_005Fsdk_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=D_003A_005CDownloads_005Cdiscord_005Fgame_005Fsdk_005Clib_005Cx86_005Cdiscord_005Fgame_005Fsdk_002Edll_002Elib/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=D_003A_005CDownloads_005Cdiscord_005Fgame_005Fsdk_005Clib_005Cx86_005F64_005Cdiscord_005Fgame_005Fsdk_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
+  &lt;Assembly Path="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\mscorlib.dll" /&gt;&#xD;
+&lt;/AssemblyExplorer&gt;</s:String></wpf:ResourceDictionary>
