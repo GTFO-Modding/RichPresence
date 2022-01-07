@@ -31,10 +31,9 @@ namespace RichPresence
             _lobbyManager = _discord.GetLobbyManager();
             _userManager = _discord.GetUserManager();
             UpdateActivity(_defaultActivity);
-
         }
         
-        void Update()
+        private void Update()
         {
             _discord.RunCallbacks();
         }
@@ -43,7 +42,7 @@ namespace RichPresence
         {
             _activityManager.UpdateActivity(activity, result =>
             {
-                result == Result.Ok ? Log.Message("Success!") : Log.Warning("Failed!");
+                Log.Message(result == Result.Ok ? "Success!" : "Failed!");
             });
         }
         
