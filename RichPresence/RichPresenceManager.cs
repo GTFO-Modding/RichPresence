@@ -74,6 +74,11 @@ namespace RichPresence
                     Timestamps =
                     {
                         Start = 0L
+                    },
+                    Assets =
+                    {
+                        LargeImage = "gtfo_original_white_square",
+                        LargeText = "GTFO"
                     }
                 };
             }
