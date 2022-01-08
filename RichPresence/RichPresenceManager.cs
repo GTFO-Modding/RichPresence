@@ -11,12 +11,10 @@ namespace RichPresence
         private static Discord.ActivityManager _activityManager;
         private static Discord.LobbyManager _lobbyManager;
         private static Discord.UserManager _userManager;
+        private static pActiveExpedition _expPackage;
+        private static string _matchId = Guid.NewGuid().ToString();
+        private static string _secret = Guid.NewGuid().ToString();
         private static long _clientId = 928720342908829756;
-        private static Activity _defaultActivity = new Activity()
-        {
-            State = "Playing GTFO",
-            Details = "Selecting an expedition"
-        };
         
         public RichPresenceManager(IntPtr ptr) : base(ptr) { }
         
@@ -30,22 +28,58 @@ namespace RichPresence
             _activityManager.RegisterCommand("steam://run/493520");
             _lobbyManager = _discord.GetLobbyManager();
             _userManager = _discord.GetUserManager();
-            UpdateActivity(_defaultActivity);
+            UpdateActivity(GetActivity());
         }
         
         private void Update()
         {
             _discord.RunCallbacks();
+            UpdateActivity(GetActivity());
         }
 
-        public static void UpdateActivity(Activity activity)
+        public static void UpdateActivity(Activity activity) => _activityManager.UpdateActivity(activity, result =>
         {
-            _activityManager.UpdateActivity(activity, result =>
+            Log.Message(result == Result.Ok ? "Success!" : "Failed!");
+        });
+
+        public static Activity GetActivity()
+        {
+            if (SNet.IsInLobby)
             {
-                Log.Message(result == Result.Ok ? "Success!" : "Failed!");
-            });
+                _expPackage = RundownManager.GetActiveExpeditionData();
+                return new Activity()
+                {
+                    State = "Playing GTFO",
+                    Details = (Global.InLobby ? "In lobby: " : "In the darkness: ") +
+                              RundownManager.ActiveExpedition.Descriptive.Prefix +
+                              (RichPresence._expPackage.expeditionIndex + 1).ToString() + " " +
+                              RundownManager.ActiveExpedition.Descriptive.PublicName,
+                    Party =
+                    {
+                        Id = RichPresence._matchId,
+                        Size =
+                        {
+                            CurrentSize = SNet.LobbyPlayers.Count,
+                            MaxSize = SNet.LobbyPlayers.Capacity
+                        }
+                    },
+                    Secrets =
+                    {
+                        Match = RichPresence._secret,
+                        Join = SNet.Lobby.Identifier.ID.ToString(),
+                        Spectate = "null"
+                    },
+                    Timestamps =
+                    {
+                        Start = 0L
+                    }
+                };
+            }
+            return new Activity()
+            {
+                State = "Playing GTFO",
+                Details = "Selecting an expedition"
+            };
         }
-        
-        
     }
 }
