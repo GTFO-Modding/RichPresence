@@ -1,6 +1,8 @@
 ﻿using System;
 using Discord;
+using Globals;
 using RichPresence.Utils;
+using SNetwork;
 using UnityEngine;
 
 namespace RichPresence
@@ -52,11 +54,11 @@ namespace RichPresence
                     State = "Playing GTFO",
                     Details = (Global.InLobby ? "In lobby: " : "In the darkness: ") +
                               RundownManager.ActiveExpedition.Descriptive.Prefix +
-                              (RichPresence._expPackage.expeditionIndex + 1).ToString() + " " +
+                              (_expPackage.expeditionIndex + 1).ToString() + " " +
                               RundownManager.ActiveExpedition.Descriptive.PublicName,
                     Party =
                     {
-                        Id = RichPresence._matchId,
+                        Id = _matchId,
                         Size =
                         {
                             CurrentSize = SNet.LobbyPlayers.Count,
@@ -65,7 +67,7 @@ namespace RichPresence
                     },
                     Secrets =
                     {
-                        Match = RichPresence._secret,
+                        Match = _secret,
                         Join = SNet.Lobby.Identifier.ID.ToString(),
                         Spectate = "null"
                     },
