@@ -17,32 +17,40 @@ namespace RichPresence
         private static string _matchId = Guid.NewGuid().ToString();
         private static string _secret = Guid.NewGuid().ToString();
         private static long _clientId = 928720342908829756;
-        
-        public RichPresenceManager(IntPtr ptr) : base(ptr) { }
-        
+
+        public RichPresenceManager(IntPtr ptr) : base(ptr)
+        {
+        }
+
         public static void Setup()
         {
             Log.Warning("Rundown data parsed.");
             new GameObject().AddComponent<RichPresenceManager>();
-            _discord = new Discord.Discord(_clientId, (UInt64)global::Discord.CreateFlags.Default);
+            _discord = new Discord.Discord(_clientId, (UInt64) global::Discord.CreateFlags.Default);
             _activityManager = _discord.GetActivityManager();
+            _userManager = _discord.GetUserManager();
+            _lobbyManager = _discord.GetLobbyManager();
             _activityManager.RegisterSteam(493520U);
             _activityManager.RegisterCommand("steam://run/493520");
-            _lobbyManager = _discord.GetLobbyManager();
-            _userManager = _discord.GetUserManager();
+            _activityManager.OnActivityJoin += OnActivityJoin;
+            _activityManager.OnActivityJoinRequest += OnActivityJoinRequest;
+            _activityManager.OnActivityInvite += (ActivityActionType type, ref User user,
+                ref Activity activity) =>
+            {
+                Log.Message($"Activity Invite: \n\tType:{type}\n\tUser:{user}\n\tActivity:{activity}");
+            };
+            
             UpdateActivity(GetActivity());
         }
-        
+
         private void Update()
         {
             _discord.RunCallbacks();
             UpdateActivity(GetActivity());
         }
 
-        public static void UpdateActivity(Activity activity) => _activityManager.UpdateActivity(activity, result =>
-        {
-            Log.Message(result == Result.Ok ? "Success!" : "Failed!");
-        });
+        public static void UpdateActivity(Activity activity) => _activityManager.UpdateActivity(activity,
+            result => { Log.Message(result == Result.Ok ? "Success!" : "Failed!"); });
 
         public static Activity GetActivity()
         {
@@ -82,11 +90,27 @@ namespace RichPresence
                     }
                 };
             }
+
             return new Activity()
             {
                 State = "Playing GTFO",
                 Details = "Selecting an expedition"
             };
         }
+
+        public static void OnActivityJoin(string secret)
+        {
+            if (SNet.IsInLobby)
+                SNet.Lobbies.LeaveLobby();
+            SNet.Lobbies.JoinLobby(new SNet_LobbyIdentifier(Convert.ToUInt64(secret)), true);
+        }
+
+        public static void OnActivityJoinRequest(ref User user) => RichPresence._activityManager.SendRequestReply(
+            user.Id, ActivityJoinRequestReply.Yes, (ActivityManager.SendRequestReplyHandler) (res =>
+            {
+                if (res != Result.Ok)
+                    return;
+                Log.Message("Activity join request succeeded.");
+            }));
     }
 }
