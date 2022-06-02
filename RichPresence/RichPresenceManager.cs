@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Text.RegularExpressions;
 using Discord;
 using Globals;
 using RichPresence.Utils;
@@ -10,14 +11,15 @@ namespace RichPresence
     public class RichPresenceManager : MonoBehaviour
     {
         private static Discord.Discord _discord;
-        private static Discord.ActivityManager _activityManager;
-        private static Discord.LobbyManager _lobbyManager;
-        private static Discord.UserManager _userManager;
+        private static ActivityManager _activityManager;
+        private static LobbyManager _lobbyManager;
+        private static UserManager _userManager;
         private static pActiveExpedition _expPackage;
         private static string _matchId = Guid.NewGuid().ToString();
         private static string _secret = Guid.NewGuid().ToString();
         private static long _clientId = 928720342908829756;
-
+        private static Regex _rx = new Regex("(<([^>]+)>)");
+        
         public RichPresenceManager(IntPtr ptr) : base(ptr)
         {
         }
@@ -39,7 +41,6 @@ namespace RichPresence
             {
                 Log.Message($"Activity Invite: \n\tType:{type}\n\tUser:{user}\n\tActivity:{activity}");
             };
-            
             UpdateActivity(GetActivity());
         }
 
@@ -49,28 +50,33 @@ namespace RichPresence
             UpdateActivity(GetActivity());
         }
 
-        public static void UpdateActivity(Activity activity) => _activityManager.UpdateActivity(activity,
-            result => { Log.Message(result == Result.Ok ? "Success!" : "Failed!"); });
+        public static void UpdateActivity(Activity activity) => _activityManager.UpdateActivity(activity, result =>
+        {
+            if (result != Result.Ok)
+            {
+                Log.Message("Activity Update Failed!");
+            }
+        });
 
         public static Activity GetActivity()
         {
+            
             if (SNet.IsInLobby)
             {
                 _expPackage = RundownManager.GetActiveExpeditionData();
                 return new Activity()
                 {
-                    State = "Playing GTFO",
-                    Details = (Global.InLobby ? "In lobby: " : "In the darkness: ") +
-                              RundownManager.ActiveExpedition.Descriptive.Prefix +
-                              (_expPackage.expeditionIndex + 1).ToString() + " " +
-                              RundownManager.ActiveExpedition.Descriptive.PublicName,
+                    State = Global.InLobby ? "Preparing to drop..." : "In the Complex...",
+                    Details = RundownManager.ActiveExpedition.Descriptive.Prefix +
+                              (_expPackage.expeditionIndex + 1).ToString() + " - " +
+                              _rx.Replace(RundownManager.ActiveExpedition.Descriptive.PublicName, ""),
                     Party =
                     {
                         Id = _matchId,
                         Size =
                         {
                             CurrentSize = SNet.LobbyPlayers.Count,
-                            MaxSize = SNet.LobbyPlayers.Capacity
+                            MaxSize = SNet.LobbyPlayers.Capacity,
                         }
                     },
                     Secrets =
@@ -89,12 +95,17 @@ namespace RichPresence
                         LargeText = "GTFO"
                     }
                 };
+               
             }
-
+            
             return new Activity()
             {
-                State = "Playing GTFO",
-                Details = "Selecting an expedition"
+                State = "Selecting an expedition...",
+                Assets =
+                {
+                    LargeImage = "gtfo_original_white_square",
+                    LargeText = "GTFO",
+                }
             };
         }
 
@@ -105,7 +116,7 @@ namespace RichPresence
             SNet.Lobbies.JoinLobby(new SNet_LobbyIdentifier(Convert.ToUInt64(secret)), true);
         }
 
-        public static void OnActivityJoinRequest(ref User user) => RichPresence._activityManager.SendRequestReply(
+        public static void OnActivityJoinRequest(ref User user) => _activityManager.SendRequestReply(
             user.Id, ActivityJoinRequestReply.Yes, (ActivityManager.SendRequestReplyHandler) (res =>
             {
                 if (res != Result.Ok)
